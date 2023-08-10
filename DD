@@ -1,0 +1,237 @@
+local library = {}
+
+function library:CreateWindow(text)
+	local main = Instance.new("ScreenGui")
+	local Frame = Instance.new("Frame")
+	local topFrame = Instance.new("Frame")
+	local TextLabel = Instance.new("TextLabel")
+	local UICorner = Instance.new("UICorner")
+	local UICorner_2 = Instance.new("UICorner")
+	local UICorner_3 = Instance.new("UICorner")
+	local cornerHider = Instance.new("Frame")
+	local alltabs = Instance.new("Frame")
+	local allPage = Instance.new("Frame")
+	local TabListLayout = Instance.new("UIListLayout")
+	local TabPadding = Instance.new("UIPadding")
+	
+	main.Name = "main"
+	main.Parent = game.CoreGui
+	main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	Frame.Parent = main
+	Frame.BackgroundColor3 = Color3.fromRGB(27, 27, 27)
+	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Frame.BorderSizePixel = 0
+	Frame.Position = UDim2.new(0.379636794, 0, 0.270076454, 0)
+	Frame.Size = UDim2.new(0, 371, 0, 240)
+
+	topFrame.Name = "topFrame"
+	topFrame.Parent = Frame
+	topFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+	topFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	topFrame.BorderSizePixel = 0
+	topFrame.Size = UDim2.new(0, 371, 0, 30)
+
+	TextLabel.Parent = topFrame
+	TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TextLabel.BackgroundTransparency = 1.000
+	TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel.BorderSizePixel = 0
+	TextLabel.Position = UDim2.new(0.0242587607, 0, 0, 0)
+	TextLabel.Size = UDim2.new(0, 200, 0, 30)
+	TextLabel.Font = Enum.Font.GothamBold
+	TextLabel.Text = text
+	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TextLabel.TextSize = 14.000
+	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+	UICorner.Parent = topFrame
+	UICorner_2.Parent = alltabs
+	UICorner_3.Parent = Frame
+	
+	cornerHider.Name = "cornerHider"
+	cornerHider.Parent = Frame
+	cornerHider.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+	cornerHider.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	cornerHider.BorderSizePixel = 0
+	cornerHider.Position = UDim2.new(0.252021551, 0, 0.124999933, 0)
+	cornerHider.Size = UDim2.new(0, 6, 0, 209)
+	
+	alltabs.Name = "alltabs"
+	alltabs.Parent = Frame
+	alltabs.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+	alltabs.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	alltabs.BorderSizePixel = 0
+	alltabs.Position = UDim2.new(0, 0, 0.125000194, 0)
+	alltabs.Size = UDim2.new(0, 100, 0, 210)
+	
+	allPage.Name = "allPage"
+	allPage.Parent = Frame
+	allPage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	allPage.BackgroundTransparency = 1.000
+	allPage.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	allPage.BorderSizePixel = 0
+	allPage.Position = UDim2.new(0.285714298, 0, 0.141666859, 0)
+	allPage.Size = UDim2.new(0, 259, 0, 199)
+	
+	TabListLayout.Name = "TabListLayout"
+	TabListLayout.Parent = alltabs
+	TabListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	TabListLayout.Padding = UDim.new(0, 4)
+
+	TabPadding.Name = "TabPadding"
+	TabPadding.Parent = alltabs
+	TabPadding.PaddingTop = UDim.new(0, 4)
+	
+	
+	
+	local pageHolder = Instance.new("Folder")
+	pageHolder.Name = "pageHolder"
+	pageHolder.Parent = allPage
+	
+	local UIS = game:GetService('UserInputService')
+	local frame = Frame -- Replace "Frame" with your actual frame variable
+	local dragToggle = nil
+	local dragSpeed = 0.01
+	local dragStart = nil
+	local startPos = nil
+
+	local function updateInput(input)
+		local delta = input.Position - dragStart
+		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+	end
+
+	frame.InputBegan:Connect(function(input)
+		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
+			dragToggle = true
+			dragStart = input.Position
+			startPos = frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragToggle = false
+				end
+			end)
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			if dragToggle then
+				updateInput(input)
+			end
+		end
+	end)
+
+	
+	
+	local Tab = {}
+	function Tab:CreateTab(tabname)
+		tabname = tabname or "New Tab"
+		local TabButton = Instance.new("TextButton")
+		local TabUICorner = Instance.new("UICorner")
+		local newPage = Instance.new("ScrollingFrame")
+		local newPageListing = Instance.new("UIListLayout")
+		local newPagePadding = Instance.new("UIPadding")
+		
+		TabButton.Name = "TabButton"
+		TabButton.Parent = alltabs
+		TabButton.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+		TabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		TabButton.BorderSizePixel = 0
+		TabButton.Size = UDim2.new(0, 87, 0, 26)
+		TabButton.AutoButtonColor = false
+		TabButton.Font = Enum.Font.GothamBold
+		TabButton.Text = tabname
+		TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+		TabButton.TextSize = 14.000
+		TabButton.MouseButton1Click:Connect(function()
+			for i,v in next, pageHolder:GetChildren() do
+				v.Visible = false
+			end 
+			newPage.Visible = true
+			
+			--Animations Below  -- Optional
+			for i,v in next, alltabs:GetChildren() do	-- We get all the elements inside the frame
+				if v:IsA("TextButton") then -- We can't animate UIListLayout, so we check if its a TextButton
+					game.TweenService:Create(v, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+						BackgroundColor3 = Color3.fromRGB(29, 29, 29) -- We animate other Tab Buttons and making the current one seem Checked
+					}):Play()
+				end
+			end
+			game.TweenService:Create(TabButton, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+				BackgroundColor3 = Color3.fromRGB(59, 59, 59) -- We animate other Tab Buttons and making the current one seem Checked
+			}):Play()
+		end)
+
+		TabUICorner.CornerRadius = UDim.new(0, 5)
+		TabUICorner.Name = "TabUICorner"
+		TabUICorner.Parent = TabButton
+		
+		newPage.Name = "newPage"
+		newPage.Parent = pageHolder
+		newPage.Active = true
+		newPage.Visible = true
+		newPage.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+		newPage.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		newPage.BorderSizePixel = 0
+		newPage.Selectable = false
+		newPage.Size = UDim2.new(0, 259, 0, 199)
+		newPage.ScrollBarThickness = 1
+		
+		newPageListing.Name = "newPageListing"
+		newPageListing.Parent = newPage
+		newPageListing.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		newPageListing.SortOrder = Enum.SortOrder.LayoutOrder
+		newPageListing.Padding = UDim.new(0, 4)
+
+		newPagePadding.Name = "newPagePadding"
+		newPagePadding.Parent = newPage
+		newPagePadding.PaddingTop = UDim.new(0, 4)
+		
+		function Tab:CreateButton(ButtonName, callback)
+			ButtonName = ButtonName or "Text Button"
+			callback = callback or function() end
+			
+			local TextButton = Instance.new("TextButton")
+			local TextButtonUICorner = Instance.new("UICorner")
+			local TextLabel_2 = Instance.new("TextLabel")
+
+			TextButton.Parent = newPage
+			TextButton.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+			TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			TextButton.BorderSizePixel = 0
+			TextButton.Position = UDim2.new(0.0193050187, 0, 0, 0)
+			TextButton.Size = UDim2.new(0, 249, 0, 28)
+			TextButton.AutoButtonColor = false
+			TextButton.Font = Enum.Font.SourceSans
+			TextButton.Text = ""
+			TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+			TextButton.TextSize = 14.000
+			TextButton.MouseButton1Click:Connect(function()
+				callback()
+			end)
+
+			TextButtonUICorner.CornerRadius = UDim.new(0, 5)
+			TextButtonUICorner.Name = "TextButtonUICorner"
+			TextButtonUICorner.Parent = TextButton
+
+			TextLabel_2.Parent = TextButton
+			TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			TextLabel_2.BackgroundTransparency = 1.000
+			TextLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			TextLabel_2.BorderSizePixel = 0
+			TextLabel_2.Position = UDim2.new(0.0281124506, 0, 0, 0)
+			TextLabel_2.Size = UDim2.new(0, 200, 0, 28)
+			TextLabel_2.Font = Enum.Font.GothamBold
+			TextLabel_2.Text = ButtonName
+			TextLabel_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+			TextLabel_2.TextSize = 12.000
+			TextLabel_2.TextXAlignment = Enum.TextXAlignment.Left
+		end
+	end
+	return Tab
+end
+return library
